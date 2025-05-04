@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
+  "prebuild": "echo \"//zoominfo.jfrog.io/artifactory/api/npm/virtual-npm/:_authToken=${NPM_AUTH_TOKEN}\" > .npmrc",
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint"
+},
   "dependencies": {
     "autoprefixer": "^10.4.21",
     "next": "15.3.1",
