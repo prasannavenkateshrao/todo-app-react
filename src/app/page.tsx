@@ -1,21 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { addTodo, removeTodo, getTodos } from './actions'; // adjust path if needed
 
 export default function Home() {
   const [todo, setTodo] = useState('');
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState<string[]>([]);
 
-  const handleAddTodo = () => {
+  useEffect(() => {
+    const fetch = async () => {
+      const data = await getTodos();
+      setTodos(data);
+    };
+    fetch();
+  }, []);
+
+  const handleAdd = async () => {
     if (todo.trim()) {
-      setTodos([...todos, todo]);
+      const updated = await addTodo(todo);
+      setTodos(updated);
       setTodo('');
     }
   };
 
-  const handleRemoveTodo = (index) => {
-    const updatedTodos = todos.filter((_, i) => i !== index);
-    setTodos(updatedTodos);
+  const handleRemove = async (index: number) => {
+    const updated = await removeTodo(index);
+    setTodos(updated);
   };
 
   return (
@@ -32,7 +42,7 @@ export default function Home() {
             className="flex-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <button
-            onClick={handleAddTodo}
+            onClick={handleAdd}
             className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           >
             Add
@@ -47,7 +57,7 @@ export default function Home() {
             >
               <span className="text-lg text-gray-700">{todoItem}</span>
               <button
-                onClick={() => handleRemoveTodo(index)}
+                onClick={() => handleRemove(index)}
                 className="ml-4 px-4 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
               >
                 Remove
